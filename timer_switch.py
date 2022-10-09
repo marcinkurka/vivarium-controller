@@ -9,15 +9,17 @@ from time import sleep
 
 if __name__ == '__main__':
  ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1) #TODO: Fix hardcode
- onTime = time(7, 20, 0)
- offTime = time(19, 20, 0) #TODO: Fix hardcode
+ onTime = time(9, 20, 0)
+ offTime = time(21, 20, 0) #TODO: Fix hardcode
  while True:
   currentTime = datetime.now().time()
   ser.flush()
-  if currentTime.hour == offTime.hour and currnetTime.minute == offTime.minute: #TODO: this looks unelegant
+  if currentTime.hour > offTime.hour and currnetTime.minute > offTime.minute: #TODO: this looks unelegant
    ser.write(bytes("OFF\n", 'utf-8'))
-  if currentTime.hour == onTime.hour and currnetTime.minute == onTime.minute:
+  elif currentTime.hour < onTime.hour and currnetTime.minute < onTime.minute:
+   ser.write(bytes("OFF\n", 'utf-8'))
+  else:
    ser.write(bytes("ON\n", 'utf-8'))
-  sleep(0.05)
+  sleep(5)
   ser.write(bytes(currentTime.strftime("%H:%M:%S"), 'utf-8'))
   ser.write(bytes("\n", 'utf-8')) #TODO: This is not elegant
