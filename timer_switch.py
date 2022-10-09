@@ -14,9 +14,9 @@ if __name__ == '__main__':
  while True:
   currentTime = datetime.now().time()
   ser.flush()
-  if currentTime.hour > offTime.hour and currnetTime.minute > offTime.minute: #TODO: this looks unelegant
+  if currentTime.hour > offTime.hour and currentTime.minute > offTime.minute: #TODO: this looks unelegant
    ser.write(bytes("OFF\n", 'utf-8'))
-  elif currentTime.hour < onTime.hour and currnetTime.minute < onTime.minute:
+  elif currentTime.hour < onTime.hour and currentTime.minute < onTime.minute:
    ser.write(bytes("OFF\n", 'utf-8'))
   else:
    ser.write(bytes("ON\n", 'utf-8'))
