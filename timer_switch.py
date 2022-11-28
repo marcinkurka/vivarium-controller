@@ -14,12 +14,22 @@ if __name__ == '__main__':
  while True:
   currentTime = datetime.now().time()
   ser.flush()
-  if currentTime.hour > offTime.hour and currentTime.minute > offTime.minute: #TODO: this looks unelegant
-   ser.write(bytes("OFF\n", 'utf-8'))
-  elif currentTime.hour < onTime.hour and currentTime.minute < onTime.minute:
-   ser.write(bytes("OFF\n", 'utf-8'))
-  else:
-   ser.write(bytes("ON\n", 'utf-8'))
-  sleep(5)
-  ser.write(bytes(currentTime.strftime("%H:%M:%S"), 'utf-8'))
-  ser.write(bytes("\n", 'utf-8')) #TODO: This is not elegant
+  pin1 = 9
+  pwm1 = 0
+  pin2 = 3
+  pwm2 = 0
+  if currentTime > onTime or currentTime < offTime: #TODO: this looks unelegant
+   pwm1 = 255
+   pwm2 = 255
+  msgDict = {
+   "Light1": [pin1, pwm1],
+   "Light2": [pin2, pwm2],
+  }
+  msgToSend = json.dumps(msgDict)
+  ser.write(msgToSend.encode('ascii'))
+  sleep(0.1)
+  incoming = ser.readline().decode("utf-8")
+  #print (incoming)
+  sleep(0.05)
+  #ser.write(bytes(currentTime.strftime("%H:%M:%S"), 'utf-8'))
+  #ser.write(bytes("\n", 'utf-8')) #TODO: This is not elegant
