@@ -6,21 +6,24 @@
 import serial
 from datetime import datetime, date, time
 from time import sleep
+import json
+import pandas as pd
 
 if __name__ == '__main__':
  ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1) #TODO: Fix hardcode
- onTime = time(9, 20, 0)
- offTime = time(21, 20, 0) #TODO: Fix hardcode
+ lightSchedule1 = pd.read_csv("/home/pi/vivarium-controller-production/vivarium-controller/LightSchedule1.dat", sep = "\t", names = ("Hour", "Intensity"))
+ lightSchedule2 = pd.read_csv("/home/pi/vivarium-controller-production/vivarium-controller/LightSchedule2.dat", sep = "\t", names = ("Hour", "Intensity"))
+ pin1 = 9
+ pwm1 = 0
+ pin2 = 3
+ pwm2 = 0
  while True:
   currentTime = datetime.now().time()
   ser.flush()
-  pin1 = 9
-  pwm1 = 0
-  pin2 = 3
-  pwm2 = 0
-  if currentTime > onTime or currentTime < offTime: #TODO: this looks unelegant
-   pwm1 = 255
-   pwm2 = 255
+  currentParams1 = lightSchedule1[lightSchedule1["Hour"] == datetime.now().strftime("%H:%M:%S")]
+  currentParams2 = lightSchedule2[lightSchedule2["Hour"] == datetime.now().strftime("%H:%M:%S")]
+  pwm1 = int(currentParams1["Intensity"].iloc[0])
+  pwm2 = int(currentParams2["Intensity"].iloc[0])
   msgDict = {
    "Light1": [pin1, pwm1],
    "Light2": [pin2, pwm2],
