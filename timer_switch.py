@@ -8,14 +8,15 @@ from datetime import datetime, date, time
 from time import sleep
 import json
 import pandas as pd
+import codecs
 
 if __name__ == '__main__':
  ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1) #TODO: Fix hardcode
- lightSchedule1 = pd.read_csv("/home/pi/vivarium-controller-production/vivarium-controller/LightSchedule1.dat", sep = "\t", names = ("Hour", "Intensity"))
- lightSchedule2 = pd.read_csv("/home/pi/vivarium-controller-production/vivarium-controller/LightSchedule2.dat", sep = "\t", names = ("Hour", "Intensity"))
- pin1 = 9
+ lightSchedule1 = pd.read_csv('/home/pi/vivarium-controller-production/vivarium-controller/LightSchedule1.dat', sep = '\t', names = ("Hour", "Intensity"), encoding = 'ascii')
+ lightSchedule2 = pd.read_csv('/home/pi/vivarium-controller-production/vivarium-controller/LightSchedule2.dat', sep = '\t', names = ("Hour", "Intensity"), encoding = 'ascii')
+ pin1 = 5
  pwm1 = 0
- pin2 = 3
+ pin2 = 6
  pwm2 = 0
  while True:
   currentTime = datetime.now().time()
